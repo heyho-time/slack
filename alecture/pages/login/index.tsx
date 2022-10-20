@@ -8,6 +8,13 @@ import fetcher from '@utils/fetcher';
 
 const LogIn = () => {
   const { data, error, mutate } = useSWR('/api/users', fetcher);
+  // const {data} = useSWR('hello', (key)=> {localStorage.setItem('data',key); return localStorage.getItem('data')})
+  // swr이 항상 비동기요청과만 관련있는게 아니라 이렇게 전역상태관리로 쓰일 수 있다.
+  // 다른 컴포넌트에서 이렇게 사용가능.
+  // const {data} = useSWR('hello')
+
+  // const { data, error, mutate } = useSWR('/api/users#123', fetcher);
+  // 이렇게 #붙이면 swr이 다르게 인식. 요청은 같게 보내면서 데이터는 다르게 저장할 수 있다.
 
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
@@ -26,8 +33,8 @@ const LogIn = () => {
           }, //get일때와 post일때 withCredentials 위치가 다르다.
         )
         .then((response) => {
-          console.log(response.data, 'onSubmit안에서');
-          mutate(response.data);
+          mutate(response.data, true); //optimistic ui -> 낙관적ui 통신 성공할꺼로 예측하고 하는거..
+          // 서버에 요청이 가기도전에 액션이 바로바로 반영되도록
         })
         .catch((error) => {
           setLogInError(error.response?.data?.statusCode === 401);
@@ -35,7 +42,7 @@ const LogIn = () => {
     },
     [email, password],
   );
-  console.log(data, 'login컴포에서');
+
   if (data) {
     return <Navigate to="/workspace/channel" />;
   }

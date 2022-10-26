@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Header, Button, Error, Form, Input, Label, LinkContainer, Success } from '@pages/signup/styles';
 import useInput from '@hooks/useInput';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import useSWR from 'swr';
 import fetcher from '@utils/fetcher';
@@ -59,6 +59,10 @@ const SignUp = () => {
     },
     [email, nickname, password, passwordCheck, mismatchError],
   );
+
+  if (data) {
+    return <Navigate to="/workspace/sleact/channel/일반" />;
+  }
 
   return (
     <div id="container">

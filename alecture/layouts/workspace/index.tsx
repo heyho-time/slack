@@ -28,6 +28,8 @@ import useInput from '@hooks/useInput';
 import Modal from '@components/modal';
 import { toast } from 'react-toastify';
 
+import CreateChannelModal from '@components/createChannelModal';
+
 const Workspace: FC = ({ children }) => {
   const { data: userData, error, mutate } = useSWR<IUser | false>('/api/users', fetcher);
 
@@ -36,10 +38,11 @@ const Workspace: FC = ({ children }) => {
   }
 
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
   const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
+  const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
+  const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
 
   //functions
   const onLogout = useCallback(() => {
@@ -92,10 +95,15 @@ const Workspace: FC = ({ children }) => {
 
   const onCloseModal = useCallback(() => {
     setShowCreateWorkspaceModal(false);
+    setShowCreateChannelModal(false);
   }, []);
 
   const toggleWorkspaceModal = useCallback(() => {
     setShowWorkspaceModal(!showWorkspaceModal);
+  }, [showWorkspaceModal]);
+
+  const onClickAddChannel = useCallback(() => {
+    setShowCreateChannelModal(true);
   }, []);
 
   return (
@@ -139,8 +147,8 @@ const Workspace: FC = ({ children }) => {
               <WorkspaceModal>
                 <h2>Sleact</h2>
                 {/* <button onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button> */}
-                {/* <button onClick={onClickAddChannel}>워크스페이스에 사용자 초대</button> */}
-                {/* <button onClick={onLogOut}>로그아웃</button> */}
+                <button onClick={onClickAddChannel}>채널 만들기</button>
+                <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
           </MenuScroll>
@@ -161,6 +169,8 @@ const Workspace: FC = ({ children }) => {
           <Button type="submit">생성하기</Button>
         </form>
       </Modal>
+
+      <CreateChannelModal show={showCreateChannelModal} onCloseModal={onCloseModal} />
     </div>
   );
 };

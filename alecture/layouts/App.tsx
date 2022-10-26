@@ -13,8 +13,8 @@ const App = () => {
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/workspace/channel" element={<Channel />} />
-      <Route path="/workspace/dm" element={<DirectMessage />} />
+      <Route path="/workspace/:workspace/channel/:channel" element={<Channel />} />
+      <Route path="/workspace/:workspace/dm/:id" element={<DirectMessage />} />
     </Routes>
   );
 };

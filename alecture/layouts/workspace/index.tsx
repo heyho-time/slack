@@ -1,7 +1,7 @@
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { FC, useCallback, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import {
   AddButton,
@@ -22,7 +22,7 @@ import {
 import gravatar from 'gravatar';
 import Menu from '@components/menu';
 import { Link } from 'react-router-dom';
-import { IUser, IWorkspace } from '@typings/db';
+import { IChannel, IUser, IWorkspace } from '@typings/db';
 import { Button, Input, Label } from '@pages/signup/styles';
 import useInput from '@hooks/useInput';
 import Modal from '@components/modal';
@@ -31,7 +31,10 @@ import { toast } from 'react-toastify';
 import CreateChannelModal from '@components/createChannelModal';
 
 const Workspace: FC = ({ children }) => {
+  const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
+
   const { data: userData, error, mutate } = useSWR<IUser | false>('/api/users', fetcher);
+  const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
 
   if (!userData) {
     return <Navigate to="/login" />;
@@ -108,25 +111,25 @@ const Workspace: FC = ({ children }) => {
 
   return (
     <div>
-      <Header>test</Header>
-
-      <RightMenu>
-        <span onClick={onClickUserProfile}>
-          <ProfileImg src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
-          {showUserMenu && (
-            <Menu style={{ right: 0, top: 38 }} onCloseModal={onClickUserProfile} show={showUserMenu}>
-              <ProfileModal>
-                <img src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
-                <div>
-                  <span id="profile-name">{userData.nickname}</span>
-                  <span id="profile-active">Active</span>
-                </div>
-              </ProfileModal>
-              <LogOutButton onClick={onLogout}>로그아웃</LogOutButton>
-            </Menu>
-          )}
-        </span>
-      </RightMenu>
+      <Header>
+        <RightMenu>
+          <span onClick={onClickUserProfile}>
+            <ProfileImg src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
+            {showUserMenu && (
+              <Menu style={{ right: 0, top: 38 }} onCloseModal={onClickUserProfile} show={showUserMenu}>
+                <ProfileModal>
+                  <img src={gravatar.url(userData.email, { s: '28px', d: 'retro' })} alt={userData.nickname} />
+                  <div>
+                    <span id="profile-name">{userData.nickname}</span>
+                    <span id="profile-active">Active</span>
+                  </div>
+                </ProfileModal>
+                <LogOutButton onClick={onLogout}>로그아웃</LogOutButton>
+              </Menu>
+            )}
+          </span>
+        </RightMenu>
+      </Header>
 
       <WorkspaceWrapper>
         <Workspaces>
@@ -151,6 +154,9 @@ const Workspace: FC = ({ children }) => {
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
+            {channelData?.map((v, idx) => (
+              <div key={idx}>{v.name}</div>
+            ))}
           </MenuScroll>
         </Channels>
         <Chats> {children}</Chats>
@@ -170,7 +176,11 @@ const Workspace: FC = ({ children }) => {
         </form>
       </Modal>
 
-      <CreateChannelModal show={showCreateChannelModal} onCloseModal={onCloseModal} />
+      <CreateChannelModal
+        show={showCreateChannelModal}
+        onCloseModal={onCloseModal}
+        setShowCreateChannelModal={setShowCreateChannelModal}
+      />
     </div>
   );
 };

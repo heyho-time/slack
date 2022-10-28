@@ -31,6 +31,8 @@ import { toast } from 'react-toastify';
 import CreateChannelModal from '@components/createChannelModal';
 import InviteWorkspaceModal from '@components/inviteWorkspaceModal';
 import InviteChannelModal from '@components/inviteChannelModal';
+import DMList from '@components/dmList';
+import ChannelList from '@components/channelList';
 
 const Workspace: FC = ({ children }) => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
@@ -38,7 +40,6 @@ const Workspace: FC = ({ children }) => {
   const { data: userData, error, mutate } = useSWR<IUser | false>('/api/users', fetcher, { dedupingInterval: 2000 });
   const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
   const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
-  console.log(channelData, '채널데이터');
 
   if (!userData) {
     return <Navigate to="/login" />;
@@ -118,7 +119,9 @@ const Workspace: FC = ({ children }) => {
     setShowCreateChannelModal(true);
   }, []);
 
-  const onClickInviteWorkspace = useCallback(() => {}, []);
+  const onClickInviteWorkspace = useCallback(() => {
+    setShowInviteWorkspaceModal(true);
+  }, []);
 
   return (
     <div>
@@ -165,9 +168,10 @@ const Workspace: FC = ({ children }) => {
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
-            {channelData?.map((v, idx) => {
-              return <div key={idx}>{v.name}</div>;
-            })}
+
+            <ChannelList />
+
+            <DMList />
           </MenuScroll>
         </Channels>
         <Chats> {children}</Chats>

@@ -22,7 +22,7 @@ const CreateChannelModal: VFC<Props> = ({ show, onCloseModal, setShowCreateChann
   const { mutate } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
 
   const onCreateChannel = useCallback(
-    (e) => {
+    (e: any) => {
       e.preventDefault();
       axios
         .post(

@@ -21,7 +21,7 @@ const LogIn = () => {
   const [password, onChangePassword] = useInput('');
 
   const onSubmit = useCallback(
-    (e) => {
+    (e: any) => {
       e.preventDefault();
       setLogInError(false);
       axios

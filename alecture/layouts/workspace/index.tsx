@@ -34,7 +34,7 @@ import InviteChannelModal from '@components/inviteChannelModal';
 import DMList from '@components/dmList';
 import ChannelList from '@components/channelList';
 
-const Workspace: FC = ({ children }) => {
+const Workspace: FC<any> = ({ children }) => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
 
   const { data: userData, error, mutate } = useSWR<IUser | false>('/api/users', fetcher, { dedupingInterval: 2000 });
@@ -74,7 +74,7 @@ const Workspace: FC = ({ children }) => {
   }, []);
 
   const onCreateWorkspace = useCallback(
-    (e) => {
+    (e: any) => {
       e.preventDefault();
       if (!newWorkspace || !newWorkspace.trim()) return;
       if (!newUrl || !newUrl.trim()) return;

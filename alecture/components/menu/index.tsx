@@ -2,6 +2,7 @@ import React, { FC, CSSProperties, useCallback } from 'react';
 import { CloseModalButton, CreateMenu } from './styles';
 
 interface Props {
+  children: any;
   show: boolean;
   onCloseModal: (e: any) => void;
   style: CSSProperties;
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const Menu: FC<Props> = ({ children, style, show, onCloseModal, closeButton }) => {
-  const stopPropagation = useCallback((e) => {
+  const stopPropagation = useCallback((e: any) => {
     e.stopPropagation();
     // 이벤트 버블링을 막아준다.
   }, []);

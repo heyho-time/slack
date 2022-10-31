@@ -3,10 +3,11 @@ import React, { FC, useCallback } from 'react';
 
 interface Props {
   show: boolean;
+  children: any;
   onCloseModal: () => void;
 }
 const Modal: FC<Props> = ({ show, children, onCloseModal }) => {
-  const stopPropagation = useCallback((e) => {
+  const stopPropagation = useCallback((e: any) => {
     e.stopPropagation();
   }, []);
 

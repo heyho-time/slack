@@ -6,7 +6,7 @@ export const RightMenu = styled.div`
 
 export const Header = styled.header`
   height: 38px;
-  background: #350d36;
+  background: gray;
   color: #ffffff;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
   padding: 5px;
@@ -77,7 +77,7 @@ export const Channels = styled.nav`
   display: inline-flex;
   flex-direction: column;
   background: #3f0e40;
-  color: rgb(188, 171, 188);
+  color: gray;
   vertical-align: top;
   & a {
     padding-left: 36px;

@@ -33,6 +33,7 @@ import InviteWorkspaceModal from '@components/inviteWorkspaceModal';
 import InviteChannelModal from '@components/inviteChannelModal';
 import DMList from '@components/dmList';
 import ChannelList from '@components/channelList';
+import useSocket from '@hooks/useSocket';
 
 const Workspace: FC<any> = ({ children }) => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
@@ -40,10 +41,7 @@ const Workspace: FC<any> = ({ children }) => {
   const { data: userData, error, mutate } = useSWR<IUser | false>('/api/users', fetcher, { dedupingInterval: 2000 });
   const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
   const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
-
-  if (!userData) {
-    return <Navigate to="/login" />;
-  }
+  const [socket, disconnect] = useSocket(workspace);
 
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
@@ -123,6 +121,9 @@ const Workspace: FC<any> = ({ children }) => {
     setShowInviteWorkspaceModal(true);
   }, []);
 
+  if (!userData) {
+    return <Navigate to="/login" />;
+  }
   return (
     <div>
       <Header>

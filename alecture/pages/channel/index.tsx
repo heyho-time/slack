@@ -6,8 +6,11 @@ import ChatBox from '@components/chatBox';
 import useInput from '@hooks/useInput';
 
 const Channel = () => {
-  const [chat, onChangeChat] = useInput('');
-  const onSubmitForm = useCallback(() => {}, []);
+  const [chat, onChangeChat, setChat] = useInput('');
+  const onSubmitForm = useCallback((e: any) => {
+    e.preventDefault();
+    setChat('');
+  }, []);
 
   return (
     <Workspace>

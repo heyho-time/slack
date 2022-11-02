@@ -1,8 +1,7 @@
-import { ChatArea, EachMention, Form, MentionsTextarea, SendButton, Toolbox } from '@components/ChatBox/styles';
+import { ChatArea, EachMention, Form, MentionsTextarea, SendButton, Toolbox } from '@components/chatBox/styles';
 import { IUser } from '@typings/db';
 import fetcher from '@utils/fetcher';
 import React, { useCallback, useEffect, useRef, VFC } from 'react';
-// import autosize from 'autosize';
 // import { Mention, SuggestionDataItem } from 'react-mentions';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -24,51 +23,50 @@ const ChatBox: VFC<Props> = ({ chat, onSubmitForm, onChangeChat }) => {
   });
   const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  //   useEffect(() => {
-  //     if (textareaRef.current) {
-  //       autosize(textareaRef.current);
-  //     }
-  //   }, []);
-
-  //   const onKeydownChat = useCallback(
-  //     (e: any) => {
-  //       if (e.key === 'Enter') {
-  //         if (!e.shiftKey) {
-  //           e.preventDefault();
-  //           onSubmitForm(e);
-  //         }
-  //       }
-  //     },
-  //     [onSubmitForm],
-  //   );
-
-  const renderSuggestion = useCallback(
-    (
-      //   suggestion: SuggestionDataItem,
-      search: string,
-      highlightedDisplay: React.ReactNode,
-      index: number,
-      focus: boolean,
-    ): React.ReactNode => {
-      if (!memberData) return;
-      return (
-        <EachMention focus={focus}>
-          <img
-            src={gravatar.url(memberData[index].email, { s: '20px', d: 'retro' })}
-            alt={memberData[index].nickname}
-          />
-          <span>{highlightedDisplay}</span>
-        </EachMention>
-      );
+  const onKeydownChat = useCallback(
+    (e: any) => {
+      if (e.key === 'Enter') {
+        if (!e.shiftKey) {
+          e.preventDefault();
+          onSubmitForm(e);
+        }
+      }
     },
-    [memberData],
+    [onSubmitForm],
   );
+
+  // const renderSuggestion = useCallback(
+  //   (
+  //     //   suggestion: SuggestionDataItem,
+  //     search: string,
+  //     highlightedDisplay: React.ReactNode,
+  //     index: number,
+  //     focus: boolean,
+  //   ): React.ReactNode => {
+  //     if (!memberData) return;
+  //     return (
+  //       <EachMention focus={focus}>
+  //         <img
+  //           src={gravatar.url(memberData[index].email, { s: '20px', d: 'retro' })}
+  //           alt={memberData[index].nickname}
+  //         />
+  //         <span>{highlightedDisplay}</span>
+  //       </EachMention>
+  //     );
+  //   },
+  //   [memberData],
+  // );
 
   return (
     <ChatArea>
-      <Form onSubmit={() => {}}>
-        <input id="editor-chat" value={chat} onChange={onChangeChat} placeholder={'입력하슈'} />
+      <Form onSubmit={onSubmitForm}>
+        <MentionsTextarea
+          id="editor-chat"
+          value={chat}
+          onChange={onChangeChat}
+          onKeyDown={onKeydownChat}
+          placeholder={'입력하슈'}
+        />
         <Toolbox>
           <SendButton
             className={

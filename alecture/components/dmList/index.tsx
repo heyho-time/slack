@@ -1,8 +1,6 @@
-// import useSocket from '@hooks/useSocket';
 import { CollapseButton } from '@components/dmList/styles';
-import useSocket from '@hooks/useSocket';
-// import useSocket from '@hooks/useSocket';
 import { IUser, IUserWithOnline } from '@typings/db';
+import useSocket from '@hooks/useSocket';
 import fetcher from '@utils/fetcher';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
@@ -38,11 +36,8 @@ const DMList: FC = () => {
     socket?.on('onlineList', (data: number[]) => {
       setOnlineList(data);
     });
-    // socket?.on('dm', onMessage);
-    // console.log('socket on dm', socket?.hasListeners('dm'), socket);
+
     return () => {
-      // socket?.off('dm', onMessage);
-      // console.log('socket off dm', socket?.hasListeners('dm'));
       socket?.off('onlineList');
     };
   }, [socket]);
@@ -62,16 +57,7 @@ const DMList: FC = () => {
             return (
               <NavLink key={member.id} to={`/workspace/${workspace}/dm/${member.id}`}>
                 {/* <NavLink key={member.id} activeClassName="selected" to={`/workspace/${workspace}/dm/${member.id}`}></NavLink> */}
-                <i
-                  className={`c-icon p-channel_sidebar__presence_icon p-channel_sidebar__presence_icon--dim_enabled c-presence ${
-                    isOnline ? 'c-presence--active c-icon--presence-online' : 'c-icon--presence-offline'
-                  }`}
-                  aria-hidden="true"
-                  data-qa="presence_indicator"
-                  data-qa-presence-self="false"
-                  data-qa-presence-active="false"
-                  data-qa-presence-dnd="false"
-                />
+                {isOnline ? <div style={{ marginRight: 10 }}>🥎</div> : <div style={{ marginRight: 10 }}>⚾️ </div>}
                 <span>{member.nickname}</span>
                 {member.id === userData?.id && <span> (나)</span>}
               </NavLink>

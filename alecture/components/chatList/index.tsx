@@ -1,20 +1,23 @@
 // import Chat from '@components/Chat';
+import Chat from '@components/chat';
 import { ChatZone, Section, StickyHeader } from '@components/chatList/styles';
 import { IDM, IChat } from '@typings/db';
-import React, { useCallback, forwardRef, RefObject, MutableRefObject } from 'react';
+import React, { useCallback, forwardRef, RefObject, MutableRefObject, VFC } from 'react';
 // import { Scrollbars } from 'react-custom-scrollbars';
 
 interface Props {
-  chatSections: { [key: string]: (IDM | IChat)[] };
-  setSize: (f: (size: number) => number) => Promise<(IDM | IChat)[][] | undefined>;
-  isReachingEnd: boolean;
+  chatData: IDM[] | undefined;
 }
-const ChatList = forwardRef<any>(() => {
+const ChatList: VFC<Props> = ({ chatData }) => {
   return (
     <ChatZone>
-      <Section>section</Section>
+      <div>
+        {chatData?.map((chat) => (
+          <Chat key={chat.id} data={chat} />
+        ))}
+      </div>
     </ChatZone>
   );
-});
+};
 
 export default ChatList;

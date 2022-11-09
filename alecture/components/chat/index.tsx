@@ -13,7 +13,7 @@ interface Props {
 // a??b nullish coalescing
 
 const Chat: FC<Props> = ({ data }) => {
-  const user = data.Sender;
+  const user = 'Sender' in data ? data.Sender : data.User;
   const { workspace } = useParams<{ workspace: string; channel: string }>();
 
   const result = useMemo(

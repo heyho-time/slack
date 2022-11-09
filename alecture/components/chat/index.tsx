@@ -1,8 +1,9 @@
-import React, { memo, useMemo, VFC } from 'react';
+import React, { memo, useMemo, FC } from 'react';
 import { ChatWrapper } from './styles';
 import gravatar from 'gravatar';
 import regexifyString from 'regexify-string';
 import { Link, useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 interface Props {
   data: any;
@@ -11,7 +12,7 @@ interface Props {
 // a?.b optional chaining
 // a??b nullish coalescing
 
-const Chat: VFC<Props> = ({ data }) => {
+const Chat: FC<Props> = ({ data }) => {
   const user = data.Sender;
   const { workspace } = useParams<{ workspace: string; channel: string }>();
 
@@ -43,7 +44,7 @@ const Chat: VFC<Props> = ({ data }) => {
       <div className="chat-text">
         <div className="chat-user">
           <b>{user.nickname}</b>
-          <span>{data.createdAt}</span>
+          {/* <span>{dayjs(data.createdAt).format('h:mm A')}</span> */}
         </div>
         <p>{result}</p>
       </div>

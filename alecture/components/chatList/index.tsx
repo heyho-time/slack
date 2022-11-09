@@ -1,27 +1,30 @@
 import Chat from '@components/chat';
 import { ChatZone, Section, StickyHeader } from '@components/chatList/styles';
-import { IDM } from '@typings/db';
+import { IChat, IDM } from '@typings/db';
 import React, { useCallback, forwardRef, ForwardedRef, RefObject, VFC } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 interface Props {
   chatSections: { [key: string]: IDM[] };
-  setSize: (f: (size: number) => number) => Promise<IDM[][] | undefined>;
+  setSize: (f: (size: number) => number) => Promise<(IDM | IChat)[][] | undefined>;
   isReachingEnd: boolean;
   scrollRef: RefObject<Scrollbars>;
 }
 const ChatList: VFC<Props> = ({ chatSections, setSize, scrollRef, isReachingEnd }) => {
-  const onScroll = useCallback((values: any) => {
-    if (values.scrollTop === 0 && !isReachingEnd) {
-      console.log('가장 위');
-      setSize((prevSize) => prevSize + 1).then(() => {
-        // 스크롤 위치 유지
-        if (scrollRef?.current) {
-          scrollRef.current?.scrollTop(scrollRef.current?.getScrollHeight() - values.scrollHeight);
-        }
-      });
-    }
-  }, []);
+  const onScroll = useCallback(
+    (values: any) => {
+      if (values.scrollTop === 0 && !isReachingEnd) {
+        console.log('가장 위');
+        setSize((prevSize) => prevSize + 1).then(() => {
+          // 스크롤 위치 유지
+          if (scrollRef?.current) {
+            scrollRef.current?.scrollTop(scrollRef.current?.getScrollHeight() - values.scrollHeight);
+          }
+        });
+      }
+    },
+    [scrollRef, isReachingEnd, setSize],
+  );
 
   return (
     <ChatZone>
